@@ -56,7 +56,95 @@ qbinom(p = 0.999, size = 10, prob = 1/3)
 qbinom(p = 0.9999, size = 10, prob = 1/3)
 
 #### Question 13 ####
+# use "sample"
+counter = 0
+itr = 10000
 
+for (i in 1:itr) {
+  if (sum(sample(c(1,0), 100, replace = TRUE, prob = c(.05, .95))) == 5) {
+    counter = counter + 1
+  }
+}
+
+counter/itr
+
+# use "rbinom"
+itr = 10000
+sum(rbinom(itr, 100, .05) == 5)/itr
+
+counter/itr
+
+# use "dbinom"
+dbinom(5, 100, .05)
+
+#### Question 14 ####
+# a
+# expecation
+sum(c(0:50) * dbinom(0:50, 50, .2))
+
+# variance
+# E((X - E(X))^2)
+ex = sum(c(0:50) * dbinom(0:50, 50, .2))
+var = sum((c(0:50) - rep(ex, 51))^2 * dbinom(0:50, 50, .2))
+
+# E(X^2) ??? E(X)^2.
+ex = sum(c(0:50) * dbinom(0:50, 50, .2))
+x2 = c(0:50)^2
+sum(c(0:50)^2 * dbinom(0:50, 50, .2)) - ex^2
+
+# b
+x10 = rbinom(10, 50, .2)
+x100 = rbinom(100, 50, .2)
+x1000 = rbinom(1000, 50, .2)
+x10000 = rbinom(10000, 50, .2)
+x100000 = rbinom(100000, 50, .2)
+
+xcombine = rbind(c(mean(x10), var(x10)), c(mean(x100), var(x100)),
+                 c(mean(x1000), var(x1000)), c(mean(x10000), var(x10000)),
+                 c(mean(x100000), var(x100000)), c(ex, var))
+
+colnames(xcombine) = c("mean", "variance")
+rownames(xcombine) = c(10, 100, 1000, 10000, 100000, "theory")
+
+#### Question 15 ####
+n = c(5, 10, 15, 20, 50, 75, 100, 1000)
+np = c()
+prob = c()
+final = c()
+counter = 1
+
+for (i in n) {
+  np = c(i, 1/i)
+  prob = dbinom(1:5, i, 1/i)
+  result = c(np, prob)
+  final = as_tibble(rbind(final, result))
+}
+
+#rm(final.p)
+
+colnames(final) = c("n", "p", 1:5)
+final = rbind(final, c(NA, NA, dpois(1:5, 1)))
+
+#### Question 16 ####
+x = seq(0,25,.05)
+cdf = cbind(pbinom(x, 11, 10/11)
+      ,pbinom(x, 15, 10/15)
+      ,pbinom(x, 20, 10/20)
+      ,pbinom(x, 50, 10/50)
+      ,pbinom(x, 100, 10/100)
+      ,ppois(x, 10))
+
+cdf.viz = as_tibble(cdf) %>%
+  gather(dist.type, prob)
+
+cdf.viz$X = x
+
+ggplot(cdf.viz, aes(x = X, y = prob, colour = dist.type)) +
+  geom_line()
+
+#### teacher's codes for 13 & 16 START ####
+
+#### Question 13 ####
 # Estimate 1
 N <- 10000 # number of repeats 
 counter <- 0 # counter of successes
@@ -78,8 +166,6 @@ sum(rbinom(N,100,0.05)==5)/N
 # Exact value
 dbinom(5,100,0.05)
 
-
-
 #### Question 16 ####
 
 # Put all the data into a data frame
@@ -97,3 +183,5 @@ df <- df %>%
 # The geom_line function will plot the lines
 ggplot(df,aes(x=x,y=y,colour=func)) +
   geom_line()
+
+#### teacher's codes for 13 & 16 END ####
