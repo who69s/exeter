@@ -48,7 +48,7 @@ e.min.lambda = 1/mean(e.min$value)
 randgen = function(N = 10, a = 3, m = 31, seed = 2) {
   rn.v = c()
   for (i in 1:N) {
-    x = a * seed %% m
+    x = (a * seed) %% m
     rn = x/m
     rn.v = c(rn.v, rn)
     seed = x
@@ -73,7 +73,7 @@ hist(rn.new, breaks = 10)
 max(rn.new)
 min(rn.new)
 
-# parameters min = 19
-# parameters max = 130873
-hist(runif(1000, 19, 130873))
+# parameters min = 3
+# parameters max = 5
+hist(runif(1000, 3, 5))
 
