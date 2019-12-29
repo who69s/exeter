@@ -1,5 +1,5 @@
 getwd()
-setwd("C:/Users/whoro/Documents/01-Exeter/Term1/MTHM503/assignment")
+setwd("C:/Users/whoro/Documents/01-Exeter/Term1/MTHM503/assignment/3")
 copd.ob = read.csv("copdobserved.csv")
 copd.ex = read.csv("copdexpected.csv")
 library(tidyverse)
